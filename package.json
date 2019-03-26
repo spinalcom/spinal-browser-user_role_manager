@@ -7,6 +7,8 @@
     "build": "rm -rf wwww && NODE_ENV=production node bin/parcel.config.js",
     "dev": "NODE_ENV=development node bin/parcel.config.js",
     "reset": "rm -fr www",
+    "postinstall": "npm run spinal-register",
+    "spinal-register": "spinal-register --browser 'spinal-browser-'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
