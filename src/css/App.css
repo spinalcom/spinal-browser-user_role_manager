@@ -1,0 +1,7 @@
+body {
+  overflow: hidden; /* The 'light' theme let a scroll-bar on the right of the main container */
+}
+.hscreen {
+  width: 100vw;
+  height: 100vh;
+}
