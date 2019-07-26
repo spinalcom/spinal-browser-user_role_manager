@@ -131,7 +131,7 @@ export default {
       searched: [],
       showPasswordDialog: false,
       usersComputed: [],
-      edition: true,
+      edition: false,
       userEdit: ""
     };
   },
