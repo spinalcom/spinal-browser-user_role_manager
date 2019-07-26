@@ -41,8 +41,7 @@ export default {
     return {
       users: [],
       userProfiles: [],
-      // editionDisable: true,
-      editionDisable: false,
+      editionDisable: true,
       showUserDialog: false,
     };
   },
