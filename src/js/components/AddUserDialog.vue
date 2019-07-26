@@ -30,13 +30,14 @@
             <label for="password">Password</label>
             <md-input type="password"
                       name="password"
-                      id="password"
+                      id="input-create-password"
                       autocomplete="Password"
                       v-model="form.password"
                       required />
           </md-field>
           <span class="md-error"
-                v-if="!$v.form.password.required">The Password is required</span>
+                v-if="!$v.form.password.required">The Password is
+            required</span>
           <span class="md-error"
                 v-else-if="!$v.form.password.password">Invalid Password</span>
         </div>
@@ -56,7 +57,8 @@
                 v-if="!$v.form.repeatPassword.sameAsPassword">Passwords must be
             identical</span>
           <span class="md-error"
-                v-else-if="!$v.form.repeatPassword.password">Invalid Password</span>
+                v-else-if="!$v.form.repeatPassword.password">Invalid
+            Password</span>
         </div>
 
         <md-field :class="getValidationClass('roles')">
@@ -78,6 +80,16 @@
       <md-progress-bar v-if="sending"
                        md-mode="indeterminate"></md-progress-bar>
       <md-dialog-actions>
+      <md-button class="appTable-table-cell-btn"
+                 @click="generateNewPassword">
+        <md-icon>shuffle</md-icon> Generate New Password
+      </md-button>
+      <md-button class="appTable-table-cell-btn"
+                 @click="copyToClip">
+        <md-icon>content_copy</md-icon> Copy to clipboard
+      </md-button>
+
+
         <md-button class="md-primary"
                    @click="showDialog = false">Close</md-button>
         <md-button type="submit"
@@ -157,6 +169,45 @@ export default {
     }
   },
   methods: {
+    copyToClip() {
+      let testingCodeToCopy = document.querySelector("#input-create-password");
+      const state = testingCodeToCopy.getAttribute("type");
+      testingCodeToCopy.setAttribute("type", "text");
+      testingCodeToCopy.select();
+      try {
+        var successful = document.execCommand("copy");
+      } catch (err) {}
+
+      testingCodeToCopy.setAttribute("type", state);
+      window.getSelection().removeAllRanges();
+    },
+    generateNewPassword() {
+      var length = 12;
+      var string = "abcdefghijklmnopqrstuvwxyz";
+      var numeric = "0123456789";
+      var password = "";
+      var character = "";
+      while (password.length < length) {
+        if (Math.floor(Math.random() * 3)) {
+          let entity1 = Math.ceil(
+            string.length * Math.random() * Math.random()
+          );
+          let hold = string.charAt(entity1);
+          hold = entity1 % 2 == 0 ? hold.toUpperCase() : hold;
+          character += hold;
+        } else {
+          let entity2 = Math.ceil(
+            numeric.length * Math.random() * Math.random()
+          );
+          character += numeric.charAt(entity2);
+        }
+        password = character;
+      }
+
+      this.form.password = password;
+      this.form.repeatPassword = password;
+    },
+
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
 
@@ -185,7 +236,6 @@ export default {
       } catch (e) {
         this.msgSnackbar = e.message;
         this.sending = false;
-        console.log(e);
       }
       this.showSnackbar = true;
     },

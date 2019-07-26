@@ -64,7 +64,12 @@
                   slot-scope="{ item }">
       <md-table-cell v-if="!isDisabled"
                      md-label="Edit">
-        <slot name="edit-user"></slot>
+        <!-- <slot> -->
+        <md-button @click="clickOnEdit(item)" class="md-icon-button edit-button">
+          <md-icon >edit</md-icon>
+        </md-button>
+
+        <!-- </slot> -->
       </md-table-cell>
 
       <md-table-cell md-label="ID"
@@ -84,6 +89,10 @@
         </md-button>
       </md-table-cell>
     </md-table-row>
+    <EditPassword :isShown="showPasswordDialog"
+    @close="showPasswordDialog = false"
+                  :userEdit="userEdit"></EditPassword>
+
   </md-table>
 
 </template>
@@ -94,6 +103,7 @@ import {
   exportToCSV,
   exportToPDF
 } from "../utils/exportSheet.js";
+import EditPassword from "./EditPassword.vue";
 
 const toLower = text => {
   return text.toString().toLowerCase();
@@ -119,9 +129,14 @@ export default {
     return {
       search: "",
       searched: [],
+      showPasswordDialog: false,
       usersComputed: [],
-      edition: true
+      edition: true,
+      userEdit: ""
     };
+  },
+  components: {
+    EditPassword
   },
   watch: {
     users: {
@@ -173,6 +188,10 @@ export default {
     }
   },
   methods: {
+    clickOnEdit(userEdit) {
+      this.userEdit = userEdit;
+      this.showPasswordDialog = true;
+    },
     onChange(value, key, user) {
       this.$emit("onChange", value, key, this.getUser(user.id));
     },
@@ -285,6 +304,6 @@ export default {
   padding: 0;
 }
 .appTable .md-content.md-table-content {
-  max-width: 100vw;;
+  max-width: 100vw;
 }
 </style>

@@ -165,8 +165,6 @@ class SpinalIO {
         "http://" + window.location.host,
         username, right, this.spinalUserId, this.user.password,
         response => {
-          console.log("changeAccountRights ", response);
-
           let id = parseInt(response);
           resolve(id);
         },
@@ -216,7 +214,7 @@ class SpinalIO {
           if (count > 10) {
             clearInterval(interval)
             reject(new Error(
-              `imposible to get the rightsLst of "${user}"`))
+              `imposible to get the rightsLst of "${username}"`))
           }
         }
       }
@@ -306,6 +304,28 @@ class SpinalIO {
 
   getUsersProfilesDef() {
     return this.load('/etc/config/UserProfileLst')
+  }
+
+
+  changePasswordByAdmin(target, password) {
+    return new Promise((resolve, reject) => {
+      let options = location.host + "/";
+      const user = this.getauth();
+      SpinalUserManager.change_password_by_admin(
+        options,
+        target,
+        password,
+        this.spinalUserId,
+        user.password,
+        function () {
+          resolve();
+        },
+        function (err) {
+          reject(err);
+        }
+      );
+
+    })
   }
 }
 

@@ -5,11 +5,11 @@
               :isDisabled="editionDisable"
               @onEditClick="onEditClick"
               @onChange="onUserChange">
-      <div slot="edit-user">
+      <!-- <div slot="edit-user">
         <md-button class="md-icon-button edit-button">
-          <md-icon>edit</md-icon>
+          <md-icon @click="showPasswordDialog = true">edit</md-icon>
         </md-button>
-      </div>
+      </div> -->
       <div slot="edition-bar-buttons">
         <md-button @click="showUserDialog = true">
           <md-icon>person_add</md-icon>
@@ -41,8 +41,9 @@ export default {
     return {
       users: [],
       userProfiles: [],
-      editionDisable: true,
-      showUserDialog: false
+      // editionDisable: true,
+      editionDisable: false,
+      showUserDialog: false,
     };
   },
   components: {
