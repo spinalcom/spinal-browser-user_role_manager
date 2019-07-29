@@ -64,14 +64,23 @@
                   slot-scope="{ item }">
       <md-table-cell v-if="!isDisabled"
                      md-label="Edit">
-        <!-- <slot> -->
-        <md-button @click="clickOnEdit(item)" class="md-icon-button edit-button">
-          <md-icon >edit</md-icon>
-        </md-button>
+        <md-menu>
+          <md-button class="md-icon-button"
+                     md-menu-trigger>
+            <md-icon>more_vert</md-icon>
+          </md-button>
+          <md-menu-content>
+            <md-menu-item @click="clickOnEdit(item)">
+              <md-icon>edit</md-icon>
+              <span>Edit</span>
+            </md-menu-item>
 
-        <!-- </slot> -->
+            <md-menu-item @click="clickOnDelete(item)">
+              <md-icon>delete</md-icon>
+              <span>Delete</span>
+            </md-menu-item>
+        </md-menu>
       </md-table-cell>
-
       <md-table-cell md-label="ID"
                      md-sort-by="id"
                      md-numeric>{{ item.id }}</md-table-cell>
@@ -90,8 +99,15 @@
       </md-table-cell>
     </md-table-row>
     <EditPassword :isShown="showPasswordDialog"
-    @close="showPasswordDialog = false"
+                  @close="showPasswordDialog = false"
                   :userEdit="userEdit"></EditPassword>
+    <md-dialog-confirm :md-active.sync="showDeleteDialog"
+                       md-title="Confim the Removal"
+                       :md-content="`Please confirm the removal of the user <strong>${userEdit.name}</strong><br/><strong>This action is not reversible.</strong>`"
+                       md-confirm-text="Comfim"
+                       md-cancel-text="Cancel"
+                       @md-cancel="showDeleteDialog = false"
+                       @md-confirm="onConfirmDelete" />
 
   </md-table>
 
@@ -130,6 +146,7 @@ export default {
       search: "",
       searched: [],
       showPasswordDialog: false,
+      showDeleteDialog: false,
       usersComputed: [],
       edition: false,
       userEdit: ""
@@ -191,6 +208,15 @@ export default {
     clickOnEdit(userEdit) {
       this.userEdit = userEdit;
       this.showPasswordDialog = true;
+    },
+    clickOnDelete(item) {
+      this.userEdit = item;
+      this.showDeleteDialog = true;
+    },
+    onConfirmDelete() {
+      console.log(this.userEdit);
+
+      // spinalIO.deleteUser()
     },
     onChange(value, key, user) {
       this.$emit("onChange", value, key, this.getUser(user.id));
