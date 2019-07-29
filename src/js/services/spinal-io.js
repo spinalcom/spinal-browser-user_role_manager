@@ -324,9 +324,28 @@ class SpinalIO {
           reject(err);
         }
       );
-
     })
   }
+
+  deleteUserdByAdmin(target) {
+    return new Promise((resolve, reject) => {
+      let options = location.host + "/";
+      const user = this.getauth();
+      SpinalUserManager.delete_account_by_admin(
+        options,
+        target,
+        this.spinalUserId,
+        user.password,
+        function() {
+          resolve();
+        },
+        function(err) {
+          reject(err);
+        }
+      );
+    })
+  }
+
 }
 
 export const spinalIO = new SpinalIO();

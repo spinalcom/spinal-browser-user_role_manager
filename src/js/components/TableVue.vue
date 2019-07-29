@@ -120,7 +120,7 @@ import {
   exportToPDF
 } from "../utils/exportSheet.js";
 import EditPassword from "./EditPassword.vue";
-
+import { spinalIO } from "../services/spinal-io";
 const toLower = text => {
   return text.toString().toLowerCase();
 };
@@ -215,8 +215,7 @@ export default {
     },
     onConfirmDelete() {
       console.log(this.userEdit);
-
-      // spinalIO.deleteUser()
+      spinalIO.deleteUserdByAdmin(this.userEdit.name);
     },
     onChange(value, key, user) {
       this.$emit("onChange", value, key, this.getUser(user.id));
