@@ -24,7 +24,8 @@
 
 import {
   spinalCore,
-  File
+  File,
+  Directory
 } from 'spinal-core-connectorjs_type'
 import {
   decriAes,
@@ -35,6 +36,9 @@ const SpinalUserManager = window.SpinalUserManager;
 import {
   UserProfile
 } from 'spinal-env-admin-access-rights-manager/src/Models/UserProfile.ts'
+
+import axios from 'axios';
+
 class SpinalIO {
   constructor() {
     this.loadPromise = {};
@@ -69,29 +73,42 @@ class SpinalIO {
   }
 
   connect() {
+    // check si une connection au hub est en cours et la cree ou la retourne.
     if (this.connectPromise !== null) {
       return this.connectPromise;
     }
     this.connectPromise = new Promise(async (resolve, reject) => {
-      const user = this.getauth();
+      const user = this.getauth(); // get user in local storage
       if (this.user.username) {
-        SpinalUserManager.get_admin_id(
-          "http://" + window.location.host,
-          user.username,
-          user.password,
-          response => {
-            this.spinalUserId = parseInt(response);
-            this.conn = window.spinalCore.connect(
-              `http://${this.spinalUserId}:${user.password}@${window.location.host}/`
-            );
-            resolve(this.conn);
-          },
-          () => {
-            window.location = "/html/drive/";
-            reject('Authentication Connection Error');
-          }
-        );
+        FileSystem.CONNECTOR_TYPE = "Browser";
+        try {
+          // get le user or admin id (depend de l'interface)
+          // 'get_admin_id' pour admin platform
+          // 'get_user_id' pour le reste
+          const response = await axios.get(`/get_admin_id`, {
+            params: {
+              u: user.username,
+              p: user.password
+            }
+          })
+          // parse user id de la reponse
+          this.spinalUserId = parseInt(response.data);
+          // enlever le 'http://' ou 'https://'
+          // const host = serverHost.replace(/(http:\/\/|https:\/\/)/, "");
+          const host = window.location.host;
+          // creatation du Filesystem de Spinalcom (+ init connection)
+          this.conn = window.spinalCore.connect(
+            `http://${this.spinalUserId}:${user.password}@${host}/`
+          );
+          resolve(this.conn);
+          return this.conn;
+        } catch (e) {
+          // connection fail bad user/password retrun to drive
+          window.location = "/html/drive/";
+          reject('Authentication Connection Error');
+        }
       } else {
+        // connection fail bad user/password retrun to drive
         window.location = "/html/drive/";
         reject('Authentication Connection Error');
       }
@@ -235,6 +252,49 @@ class SpinalIO {
     }
     return undefined;
   }
+  getUsersDir() {
+    return this.load('/__users__')
+  }
+  async getUsersModel(usernames) {
+    const users = await this.getUsersDir();
+    for (const username in usernames) {
+      if (usernames.hasOwnProperty(username)) {
+        for (let idx = 0; idx < users.length; idx++) {
+          const user = users[idx];
+          if (user.name.get() === username) {
+            usernames[username] = user;
+            break;
+          }
+        }
+      }
+    }
+    return usernames;
+  }
+  async createPublicDir() {
+    const usersDir = await this.getUsersDir();
+    const directory = new Directory();
+    usersDir.add_file('public', directory, { model_type: 'Directory' });
+    return directory;
+  }
+
+  async addPublicFolder(username) {
+    try {
+      const users = await this.getUsersModel({ 'public': null, [username]: null });
+
+      if (users[username] === null) throw new Error('addPublicFolder : user not found.')
+      if (!users[username]._info.publicDir) {
+        let dir = null;
+        if (users['public'] === null) {
+          dir = await this.createPublicDir();
+        } else {
+          dir = await this.loadPtr(users['public']);
+        }
+        users[username]._info.add_attr('publicDir', new Ptr(dir));
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   async getAdminUserProfileModel() {
     const usersProfilesDef = await this.getUsersProfilesDef();
@@ -336,10 +396,10 @@ class SpinalIO {
         target,
         this.spinalUserId,
         user.password,
-        function() {
+        function () {
           resolve();
         },
-        function(err) {
+        function (err) {
           reject(err);
         }
       );

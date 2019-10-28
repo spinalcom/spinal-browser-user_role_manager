@@ -229,6 +229,7 @@ export default {
       try {
         await spinalIO.createNewAccount(this.form.email, this.form.password);
         await spinalIO.updateRights(this.form.email, this.form.roles);
+        await spinalIO.addPublicFolder(this.form.email);
 
         this.msgSnackbar = `User '${this.form.email}' created successfully.`;
         this.sending = false;
