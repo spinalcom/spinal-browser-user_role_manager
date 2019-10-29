@@ -42,7 +42,7 @@ export default {
       users: [],
       userProfiles: [],
       editionDisable: true,
-      showUserDialog: false,
+      showUserDialog: false
     };
   },
   components: {
@@ -149,5 +149,11 @@ export default {
 .mainApp {
   height: 100vh;
   width: 100vw;
+}
+</style>
+<style>
+.md-dialog-container,
+.md-dialog-container .md-tabs {
+  width: 100%;
 }
 </style>

@@ -17,20 +17,23 @@
 
       </md-dialog-content>
 
-      <md-dialog-actions>
-        <md-button class="appTable-table-cell-btn"
-                   @click="generateNewPassword">
-          <md-icon>shuffle</md-icon> Generate New Password
-        </md-button>
-        <md-button class="appTable-table-cell-btn"
-                   @click="copyToClip">
-          <md-icon>content_copy</md-icon> Copy to clipboard
-        </md-button>
-
-        <md-button class="md-primary"
-                   @click="showDialog = false">Close</md-button>
-        <md-button @click="updatePassword"
-                   class="md-primary">Update Password</md-button>
+      <md-dialog-actions class="bottom-bar">
+        <div>
+          <md-button class="appTable-table-cell-btn"
+                     @click="generateNewPassword">
+            <md-icon>shuffle</md-icon> Generate New Password
+          </md-button>
+          <md-button class="appTable-table-cell-btn"
+                     @click="copyToClip">
+            <md-icon>content_copy</md-icon> Copy to clipboard
+          </md-button>
+        </div>
+        <div>
+          <md-button class="md-primary"
+                     @click="showDialog = false">Close</md-button>
+          <md-button @click="updatePassword"
+                     class="md-primary">Update Password</md-button>
+        </div>
       </md-dialog-actions>
 
     </md-dialog>
@@ -192,6 +195,9 @@ export default {
   -webkit-box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   -webkit-text-fill-color: #070707 !important;
+}
+.bottom-bar {
+  flex-wrap: wrap;
 }
 </style>
 

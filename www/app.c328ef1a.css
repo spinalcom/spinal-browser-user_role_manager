@@ -123,6 +123,9 @@ body {
   -webkit-box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   -webkit-text-fill-color: #070707 !important;
+}
+.bottom-bar {
+  flex-wrap: wrap;
 }.md-select-menu.md-menu-content-bottom-start.md-menu-content-small.md-menu-content {
   z-index: 99999;
 }
@@ -241,12 +244,18 @@ body {
   -webkit-box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   box-shadow: 0 0 0px 1000px rgba(99, 99, 99, 0.58) inset;
   -webkit-text-fill-color: #070707 !important;
+}
+.bottom-bar {
+  flex-wrap: wrap;
 }.md-select-menu.md-menu-content-bottom-start.md-menu-content-small.md-menu-content {
   z-index: 99999;
 }
 .mainApp[data-v-5b200a] {
   height: 100vh;
   width: 100vw;
+}.md-dialog-container,
+.md-dialog-container .md-tabs {
+  width: 100%;
 }
 
 /*# sourceMappingURL=/html/user_role_manager/app.c328ef1a.css.map */

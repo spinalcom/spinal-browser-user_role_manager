@@ -270,8 +270,8 @@ class SpinalIO {
     }
     return usernames;
   }
-  async createPublicDir() {
-    const usersDir = await this.getUsersDir();
+  createPublicDir() {
+    const usersDir = this.getUsersDir();
     const directory = new Directory();
     usersDir.add_file('public', directory, { model_type: 'Directory' });
     return directory;
