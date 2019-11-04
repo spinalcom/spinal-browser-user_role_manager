@@ -5,7 +5,7 @@
             md-sort-order="asc"
             :class="{'edtion-disabled': !isDisabled}"
             md-card>
-    <p style="display: none;">{{isDisabled}}</p>
+    <!-- <p style="display: none;">{{isDisabled}}</p> -->
     <md-table-toolbar class="md-dense main-table-header-toolbar">
       <div class="md-toolbar-row">
         <h1 class="md-title">Users Roles</h1>

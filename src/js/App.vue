@@ -15,16 +15,21 @@
           <md-icon>person_add</md-icon>
           Add User
         </md-button>
-        <!-- <md-button>
+        <md-button @click="showUserGroupDialog = true">
           <md-icon>group_add</md-icon>
           Add Role
-        </md-button> -->
+        </md-button>
       </div>
     </TableVue>
     <AddUserDialog :isShown="showUserDialog"
                    :userProfiles="userProfiles"
                    @showStateChange="onShowUserDialog">
     </AddUserDialog>
+    <!-- :userProfiles="userProfiles" -->
+    <AddUserGroupDialog :isShown="showUserGroupDialog"
+                        @close="onShowUserGroupDialog">
+    </AddUserGroupDialog>
+
   </div>
 </template>
 
@@ -34,7 +39,9 @@ import "../css/App.css";
 import throttle from "lodash.throttle";
 import TableVue from "./components/TableVue.vue";
 import AddUserDialog from "./components/AddUserDialog.vue";
+import AddUserGroupDialog from "./components/AddUserGroupDialog.vue";
 import { spinalIO } from "./services/spinal-io.js";
+
 export default {
   name: "MainUI",
   data() {
@@ -42,12 +49,14 @@ export default {
       users: [],
       userProfiles: [],
       editionDisable: true,
-      showUserDialog: false
+      showUserDialog: false,
+      showUserGroupDialog: false
     };
   },
   components: {
     TableVue,
-    AddUserDialog
+    AddUserDialog,
+    AddUserGroupDialog
   },
   async mounted() {
     this.usersModel = await spinalIO.getUsers();
@@ -76,6 +85,9 @@ export default {
   methods: {
     onShowUserDialog(value) {
       this.showUserDialog = value;
+    },
+    onShowUserGroupDialog(value) {
+      this.showUserGroupDialog = value;
     },
     onEditClick(value) {
       this.editionDisable = value;

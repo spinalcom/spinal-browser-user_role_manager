@@ -36,6 +36,9 @@ const SpinalUserManager = window.SpinalUserManager;
 import {
   UserProfile
 } from 'spinal-env-admin-access-rights-manager/src/Models/UserProfile.ts'
+import {
+  Role
+} from 'spinal-env-admin-access-rights-manager/src/Models/Role.ts'
 
 import axios from 'axios';
 
@@ -405,7 +408,12 @@ class SpinalIO {
       );
     })
   }
-
+  addNewRole(roleName, description) {
+    return this.getUsersProfilesDef().then((roleLst) => {
+      const role = new Role(roleLst.users.length, roleName, description);
+      roleLst.users.push(role);
+    });
+  }
 }
 
 export const spinalIO = new SpinalIO();
