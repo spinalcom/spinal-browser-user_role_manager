@@ -42,7 +42,7 @@
     "pdfmake": "^0.1.54",
     "sass-loader": "^7.1.0",
     "script-loader": "^0.7.2",
-    "spinal-core-connectorjs": "git+ssh://git@github.com/spinalcom/spinal-core-connectorjs.git",
+    "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-env-admin-access-rights-manager": "git+https://github.com/spinalcom/spinal-env-admin-access-rights-manager.git",
     "streamsaver": "^1.2.0",
     "string-replace-webpack-plugin": "^0.1.3",
