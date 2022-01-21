@@ -1,35 +1,48 @@
+<!--
+Copyright 2022 SpinalCom - www.spinalcom.com
+
+This file is part of SpinalCore.
+
+Please read all of the following terms and conditions
+of the Free Software license Agreement ("Agreement")
+carefully.
+
+This Agreement is a legally binding contract between
+the Licensee (as defined below) and SpinalCom that
+sets forth the terms and conditions that govern your
+use of the Program. By installing and/or using the
+Program, you agree to abide by all the terms and
+conditions stated or referenced herein.
+
+If you do not agree to abide by these terms and
+conditions, do not demonstrate your acceptance and do
+not install or use the Program.
+You should have received a copy of the license along
+with this file. If not, see
+<http://resources.spinalcom.com/licenses.pdf>.
+-->
+
 <template>
   <div>
-    <md-dialog :md-active.sync="showDialog"
-               class="add-user-group-dialog">
-      <md-dialog-title>Add new User Role
-      </md-dialog-title>
+    <md-dialog :md-active.sync="showDialog" class="add-user-group-dialog">
+      <md-dialog-title>Add new User Role </md-dialog-title>
       <md-dialog-content class="md-scrollbar add-user-group-dialog-content">
-
         <md-field>
           <label for="input">Role Name</label>
-          <md-input type="text"
-                    name="input"
-                    v-model="input"
-                    required />
+          <md-input type="text" name="input" v-model="input" required />
         </md-field>
         <md-field>
           <label for="input">Description</label>
-          <md-input type="text"
-                    name="input"
-                    v-model="description"
-                    required />
+          <md-input type="text" name="input" v-model="description" required />
         </md-field>
-
       </md-dialog-content>
 
       <md-dialog-actions class="bottom-bar">
-          <md-button class="md-primary"
-                     @click="showDialog = false">Close</md-button>
-          <md-button @click="confim"
-                     class="md-primary">confirm</md-button>
+        <md-button class="md-primary" @click="showDialog = false"
+          >Close</md-button
+        >
+        <md-button @click="confirm" class="md-primary">confirm</md-button>
       </md-dialog-actions>
-
     </md-dialog>
     <!-- <md-snackbar md-position="center"
                  :md-duration="durationSnackbar"
@@ -39,7 +52,6 @@
       <md-button class="md-primary"
                  @click="showSnackbar = false">close</md-button>
     </md-snackbar> -->
-
   </div>
 </template>
 
@@ -51,8 +63,8 @@ export default {
 
   data() {
     return {
-      input: '',
-      description: ''
+      input: "",
+      description: "",
     };
   },
   computed: {
@@ -62,33 +74,31 @@ export default {
       },
       set(value) {
         this.$emit("close");
-      }
-    }
+      },
+    },
   },
   methods: {
-    confim() {
-      return spinalIO
-        .addNewRole(this.input, this.description)
-        .then(
-          (lst) => {
-            this.description = '';
-            this.input = '';
-            // this.msgSnackbar = "Update password done";
-            // console.log("lst", lst, this.input)
-            // this.input = "";
-            // this.showSnackbar = true;
-            console.log('ok');
-            this.$emit("close");
-          },
-          err => {
-            console.log(err);
-            
-            // this.msgSnackbar = "Error: Update password failed!";
-            // this.showSnackbar = true;
-          }
-        );
-    }
-  }
+    confirm() {
+      return spinalIO.addNewRole(this.input, this.description).then(
+        (lst) => {
+          this.description = "";
+          this.input = "";
+          // this.msgSnackbar = "Update password done";
+          // console.log("lst", lst, this.input)
+          // this.input = "";
+          // this.showSnackbar = true;
+          console.log("ok");
+          this.$emit("close");
+        },
+        (err) => {
+          console.log(err);
+
+          // this.msgSnackbar = "Error: Update password failed!";
+          // this.showSnackbar = true;
+        }
+      );
+    },
+  },
 };
 </script>
 

@@ -1,56 +1,87 @@
+<!--
+Copyright 2022 SpinalCom - www.spinalcom.com
+
+This file is part of SpinalCore.
+
+Please read all of the following terms and conditions
+of the Free Software license Agreement ("Agreement")
+carefully.
+
+This Agreement is a legally binding contract between
+the Licensee (as defined below) and SpinalCom that
+sets forth the terms and conditions that govern your
+use of the Program. By installing and/or using the
+Program, you agree to abide by all the terms and
+conditions stated or referenced herein.
+
+If you do not agree to abide by these terms and
+conditions, do not demonstrate your acceptance and do
+not install or use the Program.
+You should have received a copy of the license along
+with this file. If not, see
+<http://resources.spinalcom.com/licenses.pdf>.
+-->
+
 <template>
   <div>
-    <md-dialog :md-active.sync="showDialog"
-               class="add-user-dialog">
-      <md-dialog-title>Edit Password of <strong>{{userEdit.name}}</strong>
+    <md-dialog :md-active.sync="showDialog" class="add-user-dialog">
+      <md-dialog-title
+        >Edit Password of <strong>{{ userEdit.name }}</strong>
       </md-dialog-title>
       <md-dialog-content class="md-scrollbar add-user-dialog-content">
-
         <md-field>
           <label for="input">New password</label>
-          <md-input type="password"
-                    name="input"
-                    id="input-password-edit"
-                    v-model="input"
-                    required />
+          <md-input
+            type="password"
+            name="input"
+            id="input-password-edit"
+            v-model="input"
+            required
+          />
         </md-field>
-
       </md-dialog-content>
 
       <md-dialog-actions class="bottom-bar">
         <div>
-          <md-button class="appTable-table-cell-btn"
-                     @click="generateNewPassword">
+          <md-button
+            class="appTable-table-cell-btn"
+            @click="generateNewPassword"
+          >
             <md-icon>shuffle</md-icon> Generate New Password
           </md-button>
-          <md-button class="appTable-table-cell-btn"
-                     @click="copyToClip">
+          <md-button class="appTable-table-cell-btn" @click="copyToClip">
             <md-icon>content_copy</md-icon> Copy to clipboard
           </md-button>
         </div>
         <div>
-          <md-button class="md-primary"
-                     @click="showDialog = false">Close</md-button>
-          <md-button @click="updatePassword"
-                     class="md-primary">Update Password</md-button>
+          <md-button class="md-primary" @click="showDialog = false"
+            >Close</md-button
+          >
+          <md-button @click="updatePassword" class="md-primary"
+            >Update Password</md-button
+          >
         </div>
       </md-dialog-actions>
-
     </md-dialog>
-    <md-snackbar md-position="center"
-                 :md-duration="durationSnackbar"
-                 :md-active.sync="showSnackbar"
-                 md-persistent>
-      <span>{{msgSnackbar}}</span>
-      <md-button class="md-primary"
-                 @click="showSnackbar = false">close</md-button>
+    <md-snackbar
+      md-position="center"
+      :md-duration="durationSnackbar"
+      :md-active.sync="showSnackbar"
+      md-persistent
+    >
+      <span>{{ msgSnackbar }}</span>
+      <md-button class="md-primary" @click="showSnackbar = false"
+        >close</md-button
+      >
     </md-snackbar>
-
   </div>
 </template>
 
 <script>
 import { spinalIO } from "../services/spinal-io";
+import { copyToClip } from "../utils/copyToClip";
+import { generateNewPassword } from "../utils/generateNewPassword";
+
 export default {
   name: "EditPassword",
   props: ["isShown", "userEdit"],
@@ -60,7 +91,7 @@ export default {
       input: this.generateNewPassword(),
       showSnackbar: false,
       msgSnackbar: "",
-      durationSnackbar: 4000
+      durationSnackbar: 4000,
     };
   },
   computed: {
@@ -70,45 +101,15 @@ export default {
       },
       set(value) {
         this.$emit("close");
-      }
-    }
+      },
+    },
   },
   methods: {
     copyToClip() {
-      let testingCodeToCopy = document.querySelector("#input-password-edit");
-      const state = testingCodeToCopy.getAttribute("type");
-      testingCodeToCopy.setAttribute("type", "text");
-      testingCodeToCopy.select();
-      try {
-        var successful = document.execCommand("copy");
-      } catch (err) {}
-
-      testingCodeToCopy.setAttribute("type", state);
-      window.getSelection().removeAllRanges();
+      copyToClip("#input-password-edit");
     },
     generateNewPassword() {
-      var length = 12;
-      var string = "abcdefghijklmnopqrstuvwxyz";
-      var numeric = "0123456789";
-      var password = "";
-      var character = "";
-      while (password.length < length) {
-        if (Math.floor(Math.random() * 3)) {
-          let entity1 = Math.ceil(
-            string.length * Math.random() * Math.random()
-          );
-          let hold = string.charAt(entity1);
-          hold = entity1 % 2 == 0 ? hold.toUpperCase() : hold;
-          character += hold;
-        } else {
-          let entity2 = Math.ceil(
-            numeric.length * Math.random() * Math.random()
-          );
-          character += numeric.charAt(entity2);
-        }
-        password = character;
-      }
-      this.input = password;
+      return (this.input = generateNewPassword(12));
     },
     updatePassword() {
       return spinalIO
@@ -120,13 +121,13 @@ export default {
             this.showSnackbar = true;
             this.$emit("close");
           },
-          err => {
+          (err) => {
             this.msgSnackbar = "Error: Update password failed!";
             this.showSnackbar = true;
           }
         );
-    }
-  }
+    },
+  },
 };
 </script>
 

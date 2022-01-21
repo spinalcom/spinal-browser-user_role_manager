@@ -1,120 +1,164 @@
+<!--
+Copyright 2022 SpinalCom - www.spinalcom.com
+
+This file is part of SpinalCore.
+
+Please read all of the following terms and conditions
+of the Free Software license Agreement ("Agreement")
+carefully.
+
+This Agreement is a legally binding contract between
+the Licensee (as defined below) and SpinalCom that
+sets forth the terms and conditions that govern your
+use of the Program. By installing and/or using the
+Program, you agree to abide by all the terms and
+conditions stated or referenced herein.
+
+If you do not agree to abide by these terms and
+conditions, do not demonstrate your acceptance and do
+not install or use the Program.
+You should have received a copy of the license along
+with this file. If not, see
+<http://resources.spinalcom.com/licenses.pdf>.
+-->
+
 <template>
   <!-- <div> -->
-  <md-dialog :md-active.sync="showDialog"
-             class="add-user-dialog">
+  <md-dialog :md-active.sync="showDialog" class="add-user-dialog">
     <md-dialog-title>Add New User</md-dialog-title>
-    <form novalidate
-          style="height: calc(100% - 143px);"
-          @submit.prevent="validateUser">
-
+    <form
+      novalidate
+      style="height: calc(100% - 143px)"
+      @submit.prevent="validateUser"
+    >
       <md-dialog-content class="md-scrollbar add-user-dialog-content">
-        <div class="add-user-dialog-field"
-             :class="getValidationClass('email')">
+        <div class="add-user-dialog-field" :class="getValidationClass('email')">
           <md-field :class="getValidationClass('email')">
             <label for="email">Email</label>
-            <md-input type="email"
-                      name="email"
-                      id="email"
-                      autocomplete="email"
-                      v-model="form.email"
-                      required />
+            <md-input
+              type="email"
+              name="email"
+              id="email"
+              autocomplete="email"
+              v-model="form.email"
+              required
+            />
           </md-field>
-          <span class="md-error"
-                v-if="!$v.form.email.required">The email is required</span>
-          <span class="md-error"
-                v-else-if="!$v.form.email.email">Invalid email</span>
+          <span class="md-error" v-if="!$v.form.email.required"
+            >The email is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.email.email"
+            >Invalid email</span
+          >
         </div>
-        <div class="add-user-dialog-field"
-             :class="getValidationClass('password')">
+        <div
+          class="add-user-dialog-field"
+          :class="getValidationClass('password')"
+        >
           <md-field :class="getValidationClass('password')">
             <label for="password">Password</label>
-            <md-input type="password"
-                      name="password"
-                      id="input-create-password"
-                      autocomplete="Password"
-                      v-model="form.password"
-                      required />
+            <md-input
+              type="password"
+              name="password"
+              id="input-create-password"
+              autocomplete="Password"
+              v-model="form.password"
+              required
+            />
           </md-field>
-          <span class="md-error"
-                v-if="!$v.form.password.required">The Password is
-            required</span>
-          <span class="md-error"
-                v-else-if="!$v.form.password.password">Invalid Password</span>
+          <span class="md-error" v-if="!$v.form.password.required"
+            >The Password is required</span
+          >
+          <span class="md-error" v-else-if="!$v.form.password.password"
+            >Invalid Password</span
+          >
         </div>
 
-        <div class="add-user-dialog-field"
-             :class="getValidationClass('repeatPassword')">
+        <div
+          class="add-user-dialog-field"
+          :class="getValidationClass('repeatPassword')"
+        >
           <md-field :class="getValidationClass('repeatPassword')">
             <label for="repeatPassword">Repeat Password</label>
-            <md-input type="password"
-                      name="repeatPassword"
-                      id="repeatPassword"
-                      autocomplete="repeatPassword"
-                      v-model="form.repeatPassword"
-                      required />
+            <md-input
+              type="password"
+              name="repeatPassword"
+              id="repeatPassword"
+              autocomplete="repeatPassword"
+              v-model="form.repeatPassword"
+              required
+            />
           </md-field>
-          <span class="md-error"
-                v-if="!$v.form.repeatPassword.sameAsPassword">Passwords must be
-            identical</span>
-          <span class="md-error"
-                v-else-if="!$v.form.repeatPassword.password">Invalid
-            Password</span>
+          <span class="md-error" v-if="!$v.form.repeatPassword.sameAsPassword"
+            >Passwords must be identical</span
+          >
+          <span class="md-error" v-else-if="!$v.form.repeatPassword.password"
+            >Invalid Password</span
+          >
         </div>
 
         <md-field :class="getValidationClass('roles')">
           <label for="roles">Roles</label>
-          <md-select name="roles"
-                     id="roles"
-                     v-model="form.roles"
-                     md-dense
-                     multiple
-                     required>
-            <md-option v-for="userProfile in userProfiles"
-                       :key="userProfile.id"
-                       :value="userProfile.id">{{userProfile.name}}</md-option>
+          <md-select
+            name="roles"
+            id="roles"
+            v-model="form.roles"
+            md-dense
+            multiple
+            required
+          >
+            <md-option
+              v-for="userProfile in userProfiles"
+              :key="userProfile.id"
+              :value="userProfile.id"
+              >{{ userProfile.name }}</md-option
+            >
           </md-select>
           <span class="md-error">Select at least one role</span>
         </md-field>
-
       </md-dialog-content>
-      <md-progress-bar v-if="sending"
-                       md-mode="indeterminate"></md-progress-bar>
+      <md-progress-bar v-if="sending" md-mode="indeterminate"></md-progress-bar>
       <md-dialog-actions class="bottom-bar">
         <div>
-          <md-button class="appTable-table-cell-btn"
-                     @click="generateNewPassword">
+          <md-button
+            class="appTable-table-cell-btn"
+            @click="generateNewPassword"
+          >
             <md-icon>shuffle</md-icon> Generate New Password
           </md-button>
-          <md-button class="appTable-table-cell-btn"
-                     @click="copyToClip">
+          <md-button class="appTable-table-cell-btn" @click="copyToClip">
             <md-icon>content_copy</md-icon> Copy to clipboard
           </md-button>
         </div>
 
         <div>
-          <md-button class="md-primary"
-                     @click="showDialog = false">Close</md-button>
-          <md-button type="submit"
-                     class="md-primary">Create user</md-button>
+          <md-button class="md-primary" @click="showDialog = false"
+            >Close</md-button
+          >
+          <md-button type="submit" class="md-primary">Create user</md-button>
         </div>
       </md-dialog-actions>
-      <md-snackbar md-position="center"
-                   :md-duration="durationSnackbar"
-                   :md-active.sync="showSnackbar"
-                   md-persistent>
-        <span>{{msgSnackbar}}</span>
-        <md-button class="md-primary"
-                   @click="showSnackbar = false">close</md-button>
+      <md-snackbar
+        md-position="center"
+        :md-duration="durationSnackbar"
+        :md-active.sync="showSnackbar"
+        md-persistent
+      >
+        <span>{{ msgSnackbar }}</span>
+        <md-button class="md-primary" @click="showSnackbar = false"
+          >close</md-button
+        >
       </md-snackbar>
     </form>
   </md-dialog>
-
 </template>
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, sameAs, email, minLength } from "vuelidate/lib/validators";
 import { spinalIO } from "../services/spinal-io";
+import { copyToClip } from "../utils/copyToClip";
+import { generateNewPassword } from "../utils/generateNewPassword";
 
 export default {
   name: "AddUserDialog",
@@ -126,39 +170,39 @@ export default {
         password: null,
         repeatPassword: null,
         email: null,
-        roles: []
+        roles: [],
       },
       sending: false,
       showSnackbar: false,
       msgSnackbar: "",
-      durationSnackbar: 4000
+      durationSnackbar: 4000,
     };
   },
   validations: {
     form: {
       password: {
         required,
-        minLength: minLength(8)
+        minLength: minLength(8),
       },
       roles: {
         required,
-        minLength: minLength(1)
+        minLength: minLength(1),
       },
 
       repeatPassword: {
-        sameAsPassword: sameAs("password")
+        sameAsPassword: sameAs("password"),
       },
       email: {
         required,
-        email
-      }
-    }
+        email,
+      },
+    },
   },
   // }
   computed: {
     messageClass() {
       return {
-        "md-invalid": true
+        "md-invalid": true,
       };
     },
     showDialog: {
@@ -167,47 +211,15 @@ export default {
       },
       set(value) {
         this.$emit("showStateChange", value);
-      }
-    }
+      },
+    },
   },
   methods: {
     copyToClip() {
-      let testingCodeToCopy = document.querySelector("#input-create-password");
-      const state = testingCodeToCopy.getAttribute("type");
-      testingCodeToCopy.setAttribute("type", "text");
-      testingCodeToCopy.select();
-      try {
-        var successful = document.execCommand("copy");
-      } catch (err) {}
-
-      testingCodeToCopy.setAttribute("type", state);
-      window.getSelection().removeAllRanges();
+      copyToClip("#input-create-password");
     },
     generateNewPassword() {
-      var length = 12;
-      var string = "abcdefghijklmnopqrstuvwxyz";
-      var numeric = "0123456789";
-      var password = "";
-      var character = "";
-      while (password.length < length) {
-        if (Math.floor(Math.random() * 3)) {
-          let entity1 = Math.ceil(
-            string.length * Math.random() * Math.random()
-          );
-          let hold = string.charAt(entity1);
-          hold = entity1 % 2 == 0 ? hold.toUpperCase() : hold;
-          character += hold;
-        } else {
-          let entity2 = Math.ceil(
-            numeric.length * Math.random() * Math.random()
-          );
-          character += numeric.charAt(entity2);
-        }
-        password = character;
-      }
-
-      this.form.password = password;
-      this.form.repeatPassword = password;
+      return (this.input = generateNewPassword(12));
     },
 
     getValidationClass(fieldName) {
@@ -215,7 +227,7 @@ export default {
 
       if (field) {
         return {
-          "md-invalid": field.$invalid && field.$dirty
+          "md-invalid": field.$invalid && field.$dirty,
         };
       }
     },
@@ -247,8 +259,8 @@ export default {
       if (!this.$v.$invalid) {
         this.saveUser();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -1,3 +1,27 @@
+<!--
+Copyright 2022 SpinalCom - www.spinalcom.com
+
+This file is part of SpinalCore.
+
+Please read all of the following terms and conditions
+of the Free Software license Agreement ("Agreement")
+carefully.
+
+This Agreement is a legally binding contract between
+the Licensee (as defined below) and SpinalCom that
+sets forth the terms and conditions that govern your
+use of the Program. By installing and/or using the
+Program, you agree to abide by all the terms and
+conditions stated or referenced herein.
+
+If you do not agree to abide by these terms and
+conditions, do not demonstrate your acceptance and do
+not install or use the Program.
+You should have received a copy of the license along
+with this file. If not, see
+<http://resources.spinalcom.com/licenses.pdf>.
+-->
+
 <template>
   <md-table class="appTable"
             v-model="searched"
@@ -25,7 +49,6 @@
               <md-menu-item @click="exportXLSX">
                 <span>XLSX</span>
               </md-menu-item>
-
               <md-menu-item @click="exportCSV">
                 <span>CSV</span>
               </md-menu-item>
@@ -117,17 +140,17 @@
 import {
   exportToXLSX,
   exportToCSV,
-  exportToPDF
+  exportToPDF,
 } from "../utils/exportSheet.js";
 import EditPassword from "./EditPassword.vue";
 import { spinalIO } from "../services/spinal-io";
-const toLower = text => {
+const toLower = (text) => {
   return text.toString().toLowerCase();
 };
 
 const searchByIdOrName = (items, term) => {
   if (term) {
-    return items.filter(item => {
+    return items.filter((item) => {
       return (
         toLower(item.name).includes(toLower(term)) ||
         toLower(item.id).includes(toLower(term))
@@ -149,11 +172,11 @@ export default {
       showDeleteDialog: false,
       usersComputed: [],
       edition: false,
-      userEdit: ""
+      userEdit: "",
     };
   },
   components: {
-    EditPassword
+    EditPassword,
   },
   watch: {
     users: {
@@ -165,7 +188,7 @@ export default {
           if (usr === undefined) {
             const usr = {
               id: element.id,
-              name: element.name
+              name: element.name,
             };
             for (let i = 0; i < element.userProfiles.length; i++) {
               const userProfiles = element.userProfiles[i];
@@ -196,16 +219,17 @@ export default {
         }
         for (const userToRemove of toRemove) {
           const idx = this.usersComputed.findIndex(
-            elem => userToRemove.id === elem.id
+            (elem) => userToRemove.id === elem.id
           );
           if (idx > 0) this.usersComputed.splice(idx, 1);
         }
         this.searched = searchByIdOrName(this.usersComputed, this.search);
-      }
-    }
+      },
+    },
   },
   methods: {
     clickOnEdit(userEdit) {
+      console.log("test click edit");
       this.userEdit = userEdit;
       this.showPasswordDialog = true;
     },
@@ -241,7 +265,7 @@ export default {
       this.searched = searchByIdOrName(this.usersComputed, this.search);
     },
     exportData(cellFormatFunc) {
-      if (!cellFormatFunc) cellFormatFunc = e => e;
+      if (!cellFormatFunc) cellFormatFunc = (e) => e;
       const headerRow = [cellFormatFunc("ID"), cellFormatFunc("Name")];
       for (let idx = 0; idx < this.userProfiles.length; idx++) {
         const element = this.userProfiles[idx];
@@ -269,9 +293,9 @@ export default {
     },
     exportPDF() {
       exportToPDF("UsersRoles", this.exportData());
-    }
+    },
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
 
