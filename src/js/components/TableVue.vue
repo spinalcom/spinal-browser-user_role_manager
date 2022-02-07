@@ -127,7 +127,7 @@ with this file. If not, see
     <md-dialog-confirm :md-active.sync="showDeleteDialog"
                        md-title="Confim the Removal"
                        :md-content="`Please confirm the removal of the user <strong>${userEdit.name}</strong><br/><strong>This action is not reversible.</strong>`"
-                       md-confirm-text="Comfim"
+                       md-confirm-text="confirm"
                        md-cancel-text="Cancel"
                        @md-cancel="showDeleteDialog = false"
                        @md-confirm="onConfirmDelete" />
