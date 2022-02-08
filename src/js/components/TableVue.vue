@@ -125,7 +125,7 @@ with this file. If not, see
                   @close="showPasswordDialog = false"
                   :userEdit="userEdit"></EditPassword>
     <md-dialog-confirm :md-active.sync="showDeleteDialog"
-                       md-title="Confim the Removal"
+                       md-title="Confirm the Removal"
                        :md-content="`Please confirm the removal of the user <strong>${userEdit.name}</strong><br/><strong>This action is not reversible.</strong>`"
                        md-confirm-text="confirm"
                        md-cancel-text="Cancel"
